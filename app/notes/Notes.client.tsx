@@ -17,8 +17,8 @@ export default function NotesClient() {
   const [curPage, setCurPage] = useState(1);
   const [isModalOpen, setOpenModal] = useState(false);
 
-  const { filters } = useParams<{ filters: string[] }>()
-  const [tag, searchValue] = filters
+  const { slug } = useParams<{ slug: string[] }>()
+  const [tag, searchValue] = slug
   const [search, setSearch] = useState(searchValue ?? "")
   const normalizedTag = tag === "all" ? undefined : tag;
   const openModal = () => setOpenModal(true);

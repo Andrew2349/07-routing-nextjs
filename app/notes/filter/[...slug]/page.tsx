@@ -4,14 +4,14 @@ import NotesClient from "../../Notes.client";
 
 
 interface Props{
-    params:Promise<{filters:string[]}>
+    params:Promise<{slug:string[]}>
 }
 
 export default async function FiltersPage({params}:Props) {
      const queryClient = new QueryClient()
     
-    const { filters } = await params
-    const [tag, searchValue] = filters
+    const { slug } = await params
+    const [tag, searchValue] = slug
     const normalizedTag = tag === "all" ? undefined : tag;
     
     
