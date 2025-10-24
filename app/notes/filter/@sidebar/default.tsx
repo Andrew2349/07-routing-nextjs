@@ -3,7 +3,7 @@ import css from "./SidebarNotes.module.css"
 
 const tags = ["Todo","Work","Personal","Meeting","Shopping"]
 
-function SideBarNoter() {
+function SidebarNotes() {
     return (
          <ul className={css.menuList}>
     
@@ -20,4 +20,4 @@ function SideBarNoter() {
     </ul>
     )
 }
-export default SideBarNoter
+export default SidebarNotes

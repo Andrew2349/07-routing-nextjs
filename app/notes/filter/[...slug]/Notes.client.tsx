@@ -1,26 +1,28 @@
 "use client";
 import { useState } from "react";
-import css from "./NotesPage.module.css"
+import css from "./NotesPage.module.css";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { fetchNotes } from "../../../../lib/api";
+import { fetchNotes, Tag } from "../../../../lib/api";
 import SearchBox from "../../../../components/SearchBox/SearchBox";
 import NoteList from "../../../../components/NoteList/NoteList";
 import Modal from "../../../../components/Modal/Modal";
 import NoteForm from "../../../../components/NoteForm/NoteForm";
 import Pagination from "../../../../components/Pagination/Pagination";
 import { useDebouncedCallback } from "use-debounce";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
-export default function NotesClient() {
-  const router = useRouter()
-  
+type Props = {
+   tag?: Tag;
+  initialSearch?: string;
+};
+
+export default function NotesClient({ tag, initialSearch = "" }: Props) {
+  const router = useRouter();
   const [curPage, setCurPage] = useState(1);
   const [isModalOpen, setOpenModal] = useState(false);
+  const [search, setSearch] = useState(initialSearch);
 
-  const { slug } = useParams<{ slug: string[] }>()
-  const [tag, searchValue] = slug
-  const [search, setSearch] = useState(searchValue ?? "")
-  const normalizedTag = tag === "all" ? undefined : tag;
+  const normalizedTag = tag;
   const openModal = () => setOpenModal(true);
   const closeModal = () => setOpenModal(false);
 
@@ -28,13 +30,14 @@ export default function NotesClient() {
     queryKey: ["notes", search, curPage, normalizedTag],
     queryFn: () => fetchNotes(search, curPage, normalizedTag),
     placeholderData: keepPreviousData,
-    refetchOnMount: false
+    refetchOnMount: false,
   });
 
   const handleSearch = useDebouncedCallback((value: string) => {
     setSearch(value);
     setCurPage(1);
-    router.push(`/notes/filter/${tag}/${value}`)
+    const urlTag = normalizedTag ?? "all";
+    router.push(`/notes/filter/${urlTag}/${value}`);
   }, 500);
 
   return (
@@ -58,7 +61,9 @@ export default function NotesClient() {
         )}
       </header>
 
-      <main>{notes && notes.notes.length > 0 && <NoteList notes={notes.notes} />}</main>
+      <main>
+        {notes && notes.notes.length > 0 && <NoteList notes={notes.notes} />}
+      </main>
     </div>
   );
 }

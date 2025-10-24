@@ -10,8 +10,10 @@ interface FetchNotesResponse{
     totalPages:number
 }
 
+export type Tag = 'Todo' | 'Work' | 'Personal' | 'Meeting' | 'Shopping';
 
-export async function fetchNotes(search:string,page:number, tag?:string): Promise<FetchNotesResponse> {
+
+export async function fetchNotes(search:string,page:number, tag?:Tag): Promise<FetchNotesResponse> {
     const response = await axios.get<FetchNotesResponse>("https://notehub-public.goit.study/api/notes", {params: {
       search: search,
       page: page,
@@ -27,33 +29,39 @@ export async function fetchNotes(search:string,page:number, tag?:string): Promis
     return response.data
 }
 
-export async function createNote(payload:CreateNoteRequest) {
-  const response = await axios.post<Note>("https://notehub-public.goit.study/api/notes", payload,
+export async function createNote(payload: CreateNoteRequest): Promise<Note> {
+  const response = await axios.post<Note>(
+    "https://notehub-public.goit.study/api/notes",
+    payload,
     {
       headers: {
         Authorization: `Bearer ${myKey}`,
       },
-    })
-  return response.data
+    }
+  );
+  return response.data;
 }
 
-export async function deleteNote(noteId: string) {
-  const responce = await axios.delete<Note>(`https://notehub-public.goit.study/api/notes/${noteId}`, {
-    
-  headers: {
+export async function deleteNote(noteId: string): Promise<Note> {
+  const response = await axios.delete<Note>(
+    `https://notehub-public.goit.study/api/notes/${noteId}`,
+    {
+      headers: {
         Authorization: `Bearer ${myKey}`,
-    },
-  })
-  return responce.data
-  
+      },
+    }
+  );
+  return response.data;
 }
 
-export async function fetchNoteById(noteId: string) {
-  const response = await axios.get<Note>(`https://notehub-public.goit.study/api/notes/${noteId}`,{
-    
-  headers: {
+export async function fetchNoteById(noteId: string): Promise<Note> {
+  const response = await axios.get<Note>(
+    `https://notehub-public.goit.study/api/notes/${noteId}`,
+    {
+      headers: {
         Authorization: `Bearer ${myKey}`,
-    },
-  })
-  return response.data
+      },
+    }
+  );
+  return response.data;
 }
