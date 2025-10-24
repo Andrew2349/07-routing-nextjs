@@ -17,7 +17,8 @@ export default function NotePreviewClient({ noteId }: Props) {
 
     const { data: note, isLoading, isError  } = useQuery({
     queryKey: ["note", noteId],
-    queryFn: () => fetchNoteById(noteId),
+      queryFn: () => fetchNoteById(noteId),
+    refetchOnMount:false
   });
    if (isLoading) return <Modal onClose={handleClose}><p>Loading...</p></Modal>;
   if (isError || !note) return <Modal onClose={handleClose}><p>Failed to load note</p></Modal>;
